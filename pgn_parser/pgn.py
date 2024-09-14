@@ -109,6 +109,9 @@ class Actions:
             s = Score('*')
         g = Game(e[0], e[2], e[3], s)
         return g
+    
+    def make_games(self, input, start, end, elements):
+        return [e for e in elements]
 
 
 class PGNGameException(Exception):
