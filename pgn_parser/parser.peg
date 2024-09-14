@@ -2,10 +2,13 @@ grammar PGN
 
 # PGN Spec: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm
 # Representation of a full game in pgn format, tag_pairs, movetext and score
+
+games <- game+ %make_games
+
 game <- tag_pairs:tag_pairs [\n]? gcomment:comment? movetext:movetext score:score? [\s]* %make_game
 
 # A tag pair is a key, value store in the form [Key "Value"]
-tag_pairs <- tag_pair* %make_tag_pairs
+tag_pairs <- tag_pair+ %make_tag_pairs
 tag_pair <- "[" dlm key dlm "\"" value "\"" dlm "]" dlm %make_tag_pair
 key <- [A-Za-z0-9_]+
 value <- [^\"]*
@@ -35,7 +38,9 @@ blacks_move <- ".."
 
 # A NAG is a numeric annotation glyph, representing anontations on a move such as !! ($3)
 nags <- nag+
-nag <- "$" [0-9]+ dlm
+nag <- ("$" [0-9]+ / symbolic_nag) dlm
+symbolic_nag <- "!!" / "??" / "!?" / "?!" / "!" / "?"
+
 
 # A var or variation is a list of one or more moves surrounded by ()
 variations <- variation+ %make_variations
